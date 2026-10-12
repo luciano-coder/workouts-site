@@ -1,0 +1,314 @@
+<title>Workouts</title>
+<meta name="description" content="A gym log for Android. Free, offline and no account.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700;800&display=swap">
+<style>
+  /* Layout: a gym-floor page in the app's own dark and lime. A big headline and a logged workout as the hero,
+     then feature rows that alternate copy and phone screens, then the Coach as a separate add-on band. */
+  :root {
+    --bg: #0f1113;
+    --surface: #191c20;
+    --line: #262a30;
+    --text: #f2f3f5;
+    --text-2: #c4c9d1;
+    --muted: #9aa1ac;
+    --accent: #c8f031;
+    --on-accent: #0f1113;
+    --pr: #ff9f43;
+    --coach-bg: #1e2416;
+    --coach-edge: #3b4a1a;
+    --font-body: 'Barlow', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font-display: 'Barlow Condensed', 'Arial Narrow', system-ui, sans-serif;
+    --step--1: 0.875rem;
+    --step-0: 1.0625rem;
+    --step-1: 1.3rem;
+    --step-2: clamp(1.9rem, 4vw, 2.6rem);
+    --step-3: clamp(2.6rem, 7vw, 4.4rem);
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: var(--step-0);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1120px; margin: 0 auto; padding-inline: max(20px, 4vw); }
+  a { color: var(--accent); }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
+  h1, h2, h3 { font-family: var(--font-display); font-weight: 700; line-height: 1.02; margin: 0; text-wrap: balance; letter-spacing: -0.005em; }
+  p { margin: 0; }
+  .eyebrow {
+    font-size: 0.78rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted);
+  }
+  .num { font-family: var(--font-display); font-variant-numeric: tabular-nums; }
+
+  /* Top bar */
+  .top { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 22px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-family: var(--font-display); font-size: 1.6rem; font-weight: 800; letter-spacing: 0.01em; }
+  .brand-mark { width: 34px; height: 34px; border-radius: 9px; background: var(--accent); color: var(--on-accent); display: grid; place-items: center; }
+  .pill { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; font-size: var(--step--1); color: var(--text-2); white-space: nowrap; }
+  .pill .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+
+  /* Hero */
+  .hero { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); gap: clamp(28px, 5vw, 72px); align-items: center; padding-block: clamp(24px, 6vw, 72px) clamp(48px, 8vw, 96px); }
+  .hero h1 { font-size: clamp(3rem, 8vw, 5.6rem); }
+  .hero h1 em { font-style: normal; color: var(--accent); }
+  .lede { margin-top: 18px; max-width: 34em; color: var(--text-2); font-size: var(--step-1); line-height: 1.45; }
+  .facts { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; padding: 0; list-style: none; }
+  .facts li { display: inline-flex; align-items: center; gap: 8px; background: var(--surface); border-radius: 12px; padding: 9px 14px; font-weight: 600; font-size: 0.95rem; }
+  .facts svg { color: var(--accent); flex: none; }
+  .store { margin-top: 28px; display: inline-flex; align-items: center; gap: 12px; padding: 14px 22px; border-radius: 14px; background: var(--accent); color: var(--on-accent); font-weight: 700; font-size: 1.05rem; }
+  .store small { display: block; font-weight: 500; font-size: 0.8rem; opacity: 0.75; }
+
+  /* Phones */
+  .phone {
+    position: relative; width: 100%; max-width: 300px; aspect-ratio: 750 / 1624; border-radius: 34px; padding: 9px;
+    background: #050607; box-shadow: 0 0 0 1px #2c3138, 0 30px 60px -20px rgba(0, 0, 0, 0.8);
+  }
+  .phone img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; border-radius: 26px; }
+  .stack { position: relative; display: grid; justify-items: center; }
+  .stack .phone + .phone { position: absolute; width: 74%; right: -6%; bottom: -10%; transform: rotate(4deg); }
+  .hero .stack { padding-right: 8%; }
+  .pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(14px, 2.5vw, 28px); align-items: start; }
+  .pair .phone:nth-child(2) { margin-top: 12%; }
+
+  /* Promo video (scripts/promo) */
+  .promo { padding-bottom: clamp(48px, 8vw, 96px); }
+  .promo video { display: block; width: 100%; height: auto; border-radius: 20px; border: 1px solid var(--line); background: var(--surface); }
+  .player { position: relative; }
+  .sound { position: absolute; right: 14px; bottom: 14px; display: inline-flex; align-items: center; gap: 8px; padding: 9px 15px 9px 12px; border-radius: 999px; border: 1px solid var(--line); background: rgba(15, 17, 19, 0.8); color: var(--text); font: 600 0.92rem var(--font-body); cursor: pointer; }
+  .sound::before { content: ''; width: 16px; height: 16px; background: currentColor; mask: var(--icon) center / contain no-repeat; -webkit-mask: var(--icon) center / contain no-repeat;
+    --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M11 5L6 9H3v6h3l5 4z'/%3E%3Cpath d='M17 9l4 6M21 9l-4 6'/%3E%3C/svg%3E"); }
+  .sound[aria-pressed="true"]::before { --icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M11 5L6 9H3v6h3l5 4z'/%3E%3Cpath d='M15.5 8.5a5 5 0 010 7M18.5 5.5a9 9 0 010 13'/%3E%3C/svg%3E"); }
+
+  /* Feature rows */
+  .rows { display: flex; flex-direction: column; gap: clamp(72px, 11vw, 140px); padding-block: clamp(32px, 6vw, 64px) clamp(80px, 12vw, 140px); border-top: 1px solid var(--line); }
+  .row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(32px, 6vw, 88px); align-items: center; }
+  .row.flip > .copy { order: 2; }
+  .copy { display: flex; flex-direction: column; gap: 16px; min-width: 0; max-width: 31em; }
+  .copy h2 { font-size: var(--step-2); }
+  .copy > p { color: var(--text-2); }
+  .ticks { list-style: none; margin: 4px 0 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  .ticks li { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 10px; color: var(--text-2); }
+  .ticks li::before { content: ''; width: 10px; height: 10px; margin-top: 0.55em; border-radius: 3px; background: var(--accent); }
+  .ticks b { color: var(--text); font-weight: 600; }
+  .chip { display: inline-block; font-family: var(--font-display); font-weight: 700; color: var(--accent); }
+  .chip.pr { color: var(--pr); }
+
+  /* What free means */
+  .free { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
+  .free div { background: var(--bg); padding: 22px 20px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .free b { font-family: var(--font-display); font-size: 1.5rem; font-weight: 700; line-height: 1.1; }
+  .free span { color: var(--muted); font-size: 0.95rem; }
+
+  /* Coach band */
+  .coach { background: var(--coach-bg); border-block: 1px solid var(--coach-edge); }
+  .coach .row { padding-block: clamp(64px, 10vw, 120px); }
+  .coach .eyebrow { color: var(--accent); }
+  .coach .note { color: var(--muted); font-size: 0.95rem; }
+  .coach-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; padding-block: 0 clamp(64px, 10vw, 120px); }
+  .coach-grid div { background: rgba(15, 17, 19, 0.55); border: 1px solid var(--coach-edge); border-radius: 16px; padding: 18px 18px 20px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .coach-grid b { font-family: var(--font-display); font-size: 1.4rem; font-weight: 700; line-height: 1.1; }
+  .coach-grid p { color: var(--text-2); font-size: 0.97rem; }
+  .coach-grid .chip { display: block; margin-top: 6px; font-size: 1.05rem; }
+  @media (max-width: 860px) { .coach-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 560px) { .coach-grid { grid-template-columns: minmax(0, 1fr); } }
+
+  footer { padding-block: 36px 48px; color: var(--muted); font-size: 0.92rem; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
+
+  @media (max-width: 860px) {
+    .hero, .row { grid-template-columns: minmax(0, 1fr); }
+    .row.flip > .copy { order: 0; }
+    .hero .stack { max-width: 340px; margin: 18px auto 40px; padding-right: 14%; }
+    .free { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .pair { max-width: 520px; }
+  }
+  @media (max-width: 420px) {
+    .free { grid-template-columns: minmax(0, 1fr); }
+    .top .pill { display: none; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .hero h1 { animation: rise 0.7s cubic-bezier(.2, .7, .2, 1) both; }
+    .lede, .facts, .store { animation: rise 0.7s 0.12s cubic-bezier(.2, .7, .2, 1) both; }
+    @keyframes rise { from { transform: translateY(14px); } to { transform: none; } }
+  }
+</style>
+
+<header class="wrap top">
+  <div class="brand">
+    <span class="brand-mark" aria-hidden="true">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6.5 6.5v11M17.5 6.5v11M3.5 9v6M20.5 9v6M6.5 12h11"/></svg>
+    </span>
+    Workouts
+  </div>
+  <span class="pill"><span class="dot"></span>Android · coming to Google Play</span>
+</header>
+
+<main>
+  <section class="wrap hero">
+    <div>
+      <h1>Log the set. <em>Get back to the bar.</em></h1>
+      <p class="lede">A gym log for Android with your routines and your history in one place. Every set you log is kept, so the next session starts where the last one left off. It’s free, works without signal and doesn’t ask you to sign up.</p>
+      <ul class="facts">
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Works offline</li>
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>No account</li>
+        <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>No ads</li>
+      </ul>
+      <div class="store" role="note">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v12M7 11l5 5 5-5M4 20h16"/></svg>
+        <span>Coming soon to Google Play<small>Free download</small></span>
+      </div>
+    </div>
+    <div class="stack">
+      <div class="phone"><img src="screenshots/log.jpg" alt="A logged workout: 12 sets, 4,500 kg volume, 44 minutes, 1 PR, and heart rate averaging 116 bpm" width="750" height="1624"></div>
+      <div class="phone"><img src="screenshots/track.jpg" alt="Logging a set: target chips, weight and reps steppers, set types" width="750" height="1624" loading="lazy"></div>
+    </div>
+  </section>
+
+  <section class="wrap promo" aria-label="The app in 15 seconds">
+    <div class="player">
+      <video src="video/promo.mp4" poster="video/promo-poster.jpg" width="1280" height="720" autoplay muted loop playsinline preload="metadata"
+        aria-label="15-second tour: logging a set, the workout log, heart rate over each set, progress charts, and free with no account"></video>
+      <button class="sound" type="button" aria-pressed="false">Sound on</button>
+    </div>
+  </section>
+
+  <div class="wrap rows">
+    <section class="row">
+      <div class="copy">
+        <span class="eyebrow">At the bench</span>
+        <h2>Last session, ready to beat</h2>
+        <p>Start a day from your routine and each exercise already knows what you did last time. Steppers move by your weight step, so a set is a tap on + and Save.</p>
+        <ul class="ticks">
+          <li><span><b>Targets from your routine</b>, or last session’s sets when you don’t have one.</span></li>
+          <li><span><b>Warm-up sets added for you</b>, ramping up to your first working weight.</span></li>
+          <li><span><b>Adjusts as you go.</b> Beat the reps and the next set goes up a step; fall short and it comes down.</span></li>
+          <li><span><b>Every kind of set</b>: warm-ups, drop sets, myo-reps, partials and left/right sides.</span></li>
+        </ul>
+      </div>
+      <div class="pair">
+        <div class="phone"><img src="screenshots/track.jpg" alt="Track screen: target of 2 sets plus 2 warm-ups, weight 10 kg, 8 reps" width="750" height="1624" loading="lazy"></div>
+        <div class="phone"><img src="screenshots/plan.jpg" alt="Today's planned exercises with targets" width="750" height="1624" loading="lazy"></div>
+      </div>
+    </section>
+
+    <section class="row flip">
+      <div class="copy">
+        <span class="eyebrow">After the session</span>
+        <h2>Every workout, kept and counted</h2>
+        <p>Each day shows its sets, volume, time and new records. The calendar marks every session by muscle group, with the month’s totals underneath.</p>
+        <ul class="ticks">
+          <li><span><b>Personal records</b> flagged as you set them <span class="chip pr">2 PRs</span></span></li>
+          <li><span><b>Workout timer</b> with start and end times you can fix later.</span></li>
+          <li><span><b>Sets by muscle</b> each month, so you can see what you’re skipping.</span></li>
+        </ul>
+      </div>
+      <div class="pair">
+        <div class="phone"><img src="screenshots/month.jpg" alt="October calendar with 4 workouts, 42 sets and sets by muscle" width="750" height="1624" loading="lazy"></div>
+        <div class="phone"><img src="screenshots/progress.jpg" alt="Progress: sessions per week, sets by muscle and goals" width="750" height="1624" loading="lazy"></div>
+      </div>
+    </section>
+
+    <section class="row">
+      <div class="copy">
+        <span class="eyebrow">Over the months</span>
+        <h2>See the line go up</h2>
+        <p>Every exercise has its own graph: estimated one-rep max, heaviest weight, volume or total reps, over a month or everything you’ve logged.</p>
+        <ul class="ticks">
+          <li><span><b>Records per exercise</b>: est. 1RM, heaviest, best session and most reps.</span></li>
+          <li><span><b>Sessions per week</b> across the last 12 weeks.</span></li>
+          <li><span><b>Goals</b> for a lift, marked off when you hit them <span class="chip">210 / 200 kg</span></span></li>
+        </ul>
+      </div>
+      <div class="pair">
+        <div class="phone"><img src="screenshots/graph.jpg" alt="Overhead press graph: estimated 1RM 45.5 kg, up 11% overall" width="750" height="1624" loading="lazy"></div>
+      </div>
+    </section>
+
+    <section class="row flip">
+      <div class="copy">
+        <span class="eyebrow">Health Connect</span>
+        <h2>Your scale and watch, already in</h2>
+        <p>Connect Health Connect once and the app reads weight, body fat, sleep, resting heart rate and heart rate during each workout. It only reads; nothing is written back.</p>
+        <ul class="ticks">
+          <li><span><b>Weight and body fat</b> with a weekly trend line <span class="chip">−0.33 kg / week</span></span></li>
+          <li><span><b>Sleep and resting heart rate</b> on each day’s log.</span></li>
+          <li><span><b>Workout heart rate</b> on a timeline with your sets and rests.</span></li>
+        </ul>
+      </div>
+      <div class="pair">
+        <div class="phone"><img src="screenshots/body.jpg" alt="Body: weight 70.7 kg and body fat 14%, both trending down" width="750" height="1624" loading="lazy"></div>
+        <div class="phone"><img src="screenshots/workout-timeline.jpg" alt="Workout heart rate over 44 minutes: average 116 bpm, max 159, with the rest timer shaded and each set marked" width="750" height="1624" loading="lazy"></div>
+      </div>
+    </section>
+
+    <section aria-labelledby="free-h" style="display: flex; flex-direction: column; gap: 22px;">
+      <h2 id="free-h" style="font-size: var(--step-2);">Free, and it stays that way</h2>
+      <div class="free">
+        <div><b>Offline</b><span>Everything is stored on your phone. The gym basement is fine.</span></div>
+        <div><b>No account</b><span>Install and start logging. No email, no sign-in.</span></div>
+        <div><b>Your data</b><span>Your log is yours. Nothing is uploaded unless you choose to back it up.</span></div>
+        <div><b>Your backup</b><span>Save a backup file anywhere, or turn on Google Drive backup if you want it.</span></div>
+      </div>
+    </section>
+  </div>
+
+  <section class="coach" aria-labelledby="coach-h">
+    <div class="wrap row flip">
+      <div class="copy">
+        <span class="eyebrow">Coach · subscription add-on</span>
+        <h2 id="coach-h">Want someone to plan it for you?</h2>
+        <p>Coach reads everything you log, plus your sleep and recovery, and writes your next session: the weights, reps and sets for each exercise, with a note on why. You keep logging exactly as before; the plan is just there when you open the day.</p>
+        <p class="note">Coming soon. The free app doesn’t need it and never asks you to upgrade.</p>
+      </div>
+      <div class="pair">
+        <div class="phone"><img src="screenshots/coach-next.jpg" alt="Coach's pick for the next session: Lower A with weights for five exercises" width="750" height="1624" loading="lazy"></div>
+        <div class="phone"><img src="screenshots/coach.jpg" alt="Coach screen: running Upper/Lower/Full body, week 2 of 8, accumulation" width="750" height="1624" loading="lazy"></div>
+      </div>
+    </div>
+    <div class="wrap promo">
+      <div class="player">
+        <video src="video/coach.mp4" poster="video/coach-poster.jpg" width="1280" height="720" autoplay muted loop playsinline preload="metadata"
+          aria-label="One-minute tour with the Coach: logging a set, the workout log, heart rate and recovery, progress, then the coach's notes, next session plan, training blocks and goals, and what it reads"></video>
+        <button class="sound" type="button" aria-pressed="false">Sound on</button>
+      </div>
+    </div>
+    <div class="wrap coach-grid">
+      <div><span class="eyebrow">Every session</span><b>Your next session, planned</b><p>Weights, reps and sets for each exercise, from how your last sessions went. It also picks which day of your routine comes next, and says why <span class="chip">Lower A last trained 8 Sep</span></p></div>
+      <div><span class="eyebrow">The programme</span><b>Blocks and deload weeks</b><p>Runs your routine in blocks of accumulation, intensification and realisation, then a deload week. Each week has its own effort and volume <span class="chip">Week 2 of 7 · sets 110%</span></p></div>
+      <div><span class="eyebrow">Your aim</span><b>Strength, size or both</b><p>Tell it what you’re training for and whether you’re cutting or building. Rep ranges, rests, weekly sets and goals change to match.</p></div>
+      <div><span class="eyebrow">Effort</span><b>Reps in reserve</b><p>Rate how many reps you had left on each set. The coach sets an aim for the week, from 3 down to 1, and the remaining sets adjust to it.</p></div>
+      <div><span class="eyebrow">Rest</span><b>Rest times per exercise</b><p>Longer after the first heavy lift, shorter for isolation work. The rest timer starts with them, or shows them as a suggestion.</p></div>
+      <div><span class="eyebrow">Recovery</span><b>Reads your sleep and heart rate</b><p>Compares last night’s sleep and resting heart rate with your 14-day average, and looks at heart rate across each workout before pushing harder.</p></div>
+      <div><span class="eyebrow">Goals</span><b>Targets with a date</b><p>Lift goals like 25 kg × 7 by 5 Dec, and sessions per week, with progress shown on Progress and Coach.</p></div>
+      <div><span class="eyebrow">Routine</span><b>Changes you approve</b><p>Suggests swaps, new exercises and a new day order when something stalls. Accept or dismiss each one, or let it apply them for you.</p></div>
+      <div><span class="eyebrow">Each week</span><b>A focus and a review</b><p>A short checklist for the week, a review after every workout, form cues where they help, and alternatives when the kit is taken. Leave it notes and it reads them.</p></div>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap">
+  <span>Workouts for Android</span>
+  <span>Screenshots from the app, with real training data.</span>
+</footer>
+
+<script>
+  // The promo videos autoplay muted (browsers only allow that). Sound on starts the video over, so the music
+  // lines up with the cuts, and mutes the other one. Reduced motion: no autoplay; native controls instead.
+  const players = [...document.querySelectorAll('.player')]
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches
+  players.forEach((p) => {
+    const v = p.querySelector('video'), b = p.querySelector('.sound')
+    if (reduced) { v.removeAttribute('autoplay'); v.pause(); v.controls = true; b.remove(); return }
+    b.addEventListener('click', () => {
+      const on = v.muted
+      players.forEach((o) => { const ov = o.querySelector('video'), ob = o.querySelector('.sound'); ov.muted = true; ob.setAttribute('aria-pressed', 'false'); ob.textContent = 'Sound on' })
+      if (on) { v.muted = false; v.currentTime = 0; v.play(); b.setAttribute('aria-pressed', 'true'); b.textContent = 'Sound off' }
+    })
+  })
+</script>
