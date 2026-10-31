@@ -3,13 +3,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#0f1113">
-<title>Workouts</title>
+<title>Setkeep</title>
 <meta name="description" content="A gym log for Android. Free, offline and no account.">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700;800&display=swap">
 <style>
-  /* Layout: a gym-floor page in the app's own dark and lime. A big headline and a logged workout as the hero,
+  /* Layout: a gym-floor page in the app's own dark and sky blue (#261). A big headline and a logged workout as the hero,
      then feature rows that alternate copy and phone screens, then the Coach as a separate add-on band. */
   :root {
     --bg: #0f1113;
@@ -18,7 +19,7 @@
     --text: #f2f3f5;
     --text-2: #c4c9d1;
     --muted: #9aa1ac;
-    --accent: #c8f031;
+    --accent: #5db3e0;
     --on-accent: #0f1113;
     --pr: #ff9f43;
     --coach-bg: #1e2416;
@@ -54,14 +55,14 @@
 
   /* Top bar */
   .top { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 22px; }
-  .brand { display: flex; align-items: center; gap: 10px; font-family: var(--font-display); font-size: 1.6rem; font-weight: 800; letter-spacing: 0.01em; }
+  .brand { display: flex; align-items: center; gap: 12px; font-size: 1.15rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; }
   .brand-mark { width: 34px; height: 34px; border-radius: 9px; background: var(--accent); color: var(--on-accent); display: grid; place-items: center; }
   .pill { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; font-size: var(--step--1); color: var(--text-2); white-space: nowrap; }
   .pill .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
 
   /* Hero */
   .hero { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); gap: clamp(28px, 5vw, 72px); align-items: center; padding-block: clamp(24px, 6vw, 72px) clamp(48px, 8vw, 96px); }
-  .hero h1 { font-size: clamp(3rem, 8vw, 5.6rem); }
+  .hero h1 { font-size: clamp(3.4rem, 10vw, 7rem); font-weight: 800; text-transform: uppercase; line-height: 0.92; }
   .hero h1 em { font-style: normal; color: var(--accent); }
   .lede { margin-top: 18px; max-width: 34em; color: var(--text-2); font-size: var(--step-1); line-height: 1.45; }
   .facts { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; padding: 0; list-style: none; }
@@ -150,9 +151,9 @@
 <header class="wrap top">
   <div class="brand">
     <span class="brand-mark" aria-hidden="true">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"><path d="M6.5 6.5v11M17.5 6.5v11M3.5 9v6M20.5 9v6M6.5 12h11"/></svg>
+      <svg width="20" height="22" viewBox="-8 0 116 110"><path transform="translate(14.7 0) skewX(-15)" d="M100 0H22A22 22 0 0 0 0 22V58L72 78V82H0V110H78A22 22 0 0 0 100 88V52L28 32V28H100Z" fill="currentColor"/></svg>
     </span>
-    Workouts
+    Setkeep
   </div>
   <span class="pill"><span class="dot"></span>Android · coming to Google Play</span>
 </header>
@@ -160,7 +161,7 @@
 <main>
   <section class="wrap hero">
     <div>
-      <h1>Log the set. <em>Get back to the bar.</em></h1>
+      <h1>Log the <em>work.</em></h1>
       <p class="lede">A gym log for Android with your routines and your history in one place. Every set you log is kept, so the next session starts where the last one left off. It’s free, works without signal and doesn’t ask you to sign up.</p>
       <ul class="facts">
         <li><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>Works offline</li>
@@ -298,9 +299,9 @@
 </main>
 
 <footer class="wrap">
-  <span>Workouts for Android</span>
+  <span>Setkeep for Android</span>
   <span>Screenshots from the app, with real training data.</span>
-  <span><a href="/privacy">Privacy</a> · <a href="/delete-account">Delete your account</a></span>
+  <span><a href="mailto:support@stellarspectra.co.uk">Support</a> · <a href="/privacy">Privacy</a> · <a href="/delete-account">Delete your account</a></span>
 </footer>
 
 <script>
